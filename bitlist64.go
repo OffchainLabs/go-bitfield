@@ -81,7 +81,6 @@ func (b *Bitlist64) BitAt(idx uint64) bool {
 }
 
 // SetBitAt will set the bit at the given index to the given value.
-// If the index requested exceeds the number of bits in the bitlist, then this method returns false.
 func (b *Bitlist64) SetBitAt(idx uint64, val bool) {
 	// Out of bounds, do nothing.
 	if idx >= b.size {
