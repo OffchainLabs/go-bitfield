@@ -1,10 +1,10 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test", "nogo")
 
-# gazelle:prefix github.com/prysmaticlabs/go-bitfield
+# gazelle:prefix github.com/OffchainLabs/go-bitfield
 gazelle(
     name = "gazelle",
-    prefix = "github.com/prysmaticlabs/go-bitfield",
+    prefix = "github.com/OffchainLabs/go-bitfield",
 )
 
 nogo(
@@ -63,7 +63,7 @@ go_library(
         "errors.go",
         "min.go",
     ],
-    importpath = "github.com/prysmaticlabs/go-bitfield",
+    importpath = "github.com/OffchainLabs/go-bitfield",
     visibility = ["//visibility:public"],
 )
 

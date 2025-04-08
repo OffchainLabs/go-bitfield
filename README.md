@@ -1,5 +1,5 @@
 # go-bitfield
-[![GoDoc](https://godoc.org/github.com/prysmaticlabs/go-bitfield?status.svg)](https://godoc.org/github.com/prysmaticlabs/go-bitfield) [![Go Report Card](https://goreportcard.com/badge/github.com/prysmaticlabs/go-bitfield)](https://goreportcard.com/report/github.com/prysmaticlabs/go-bitfield)
+[![GoDoc](https://godoc.org/github.com/OffchainLabs/go-bitfield?status.svg)](https://godoc.org/github.com/OffchainLabs/go-bitfield) [![Go Report Card](https://goreportcard.com/badge/github.com/OffchainLabs/go-bitfield)](https://goreportcard.com/report/github.com/OffchainLabs/go-bitfield)
 [![Build status](https://badge.buildkite.com/d02b7b562889bd1560dc726c01e2470f17dd2061056122bb1f.svg?branch=master)](https://buildkite.com/prysmatic-labs/go-bitfield)
 
 Bitfields are a bytes abstraction to represent a list of bits. 
@@ -9,7 +9,7 @@ See the godoc reference for more details.
 ## Usage
 
 ```
-go get github.com/prysmaticlabs/go-bitfield
+go get github.com/OffchainLabs/go-bitfield
 ```
 
 ## Contributing
