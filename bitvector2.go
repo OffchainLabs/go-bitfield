@@ -95,12 +95,15 @@ func (b Bitvector2) Shift(i int) {
 // BitIndices returns the list of indices that are set to 1.
 func (b Bitvector2) BitIndices() []int {
 	indices := make([]int, 0, 2)
-	for i, bt := range b {
-		for j := 0; j < 8; j++ {
-			bit := byte(1 << uint(j))
-			if bt&bit == bit {
-				indices = append(indices, i*8+j)
-			}
+	if len(b) != bitvector2ByteSize {
+		return indices
+	}
+
+	bt := b[0]
+	for j := 0; j < bitvector2BitSize; j++ {
+		bit := byte(1 << uint(j))
+		if bt&bit == bit {
+			indices = append(indices, j)
 		}
 	}
 
