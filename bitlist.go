@@ -158,7 +158,7 @@ func (b Bitlist) Count() uint64 {
 // Contains returns true if the bitlist contains all of the bits from the provided argument
 // bitlist. This method will return an error if bitlists are not the same length.
 func (b Bitlist) Contains(c Bitlist) (bool, error) {
-	if b.Len() != c.Len() {
+	if b.Len() != c.Len() || len(b) != len(c) {
 		return false, ErrBitlistDifferentLength
 	}
 
@@ -205,7 +205,7 @@ func (b Bitlist) Overlaps(c Bitlist) (bool, error) {
 
 // Or returns the OR result of the two bitfields. This method will return an error if the bitlists are not the same length.
 func (b Bitlist) Or(c Bitlist) (Bitlist, error) {
-	if b.Len() != c.Len() {
+	if b.Len() != c.Len() || len(b) != len(c) {
 		return nil, ErrBitlistDifferentLength
 	}
 
@@ -221,7 +221,7 @@ func (b Bitlist) Or(c Bitlist) (Bitlist, error) {
 // Result is written into provided variable, so no allocation takes place inside the function.
 // This method will return an error if the bitlists are not the same length.
 func (b Bitlist) NoAllocOr(c, ret Bitlist) error {
-	if b.Len() != c.Len() || b.Len() != ret.Len() {
+	if b.Len() != c.Len() || b.Len() != ret.Len() || len(b) != len(c) || len(b) != len(ret) {
 		return ErrBitlistDifferentLength
 	}
 
@@ -233,7 +233,7 @@ func (b Bitlist) NoAllocOr(c, ret Bitlist) error {
 
 // And returns the AND result of the two bitfields. This method will return an error if the bitlists are not the same length.
 func (b Bitlist) And(c Bitlist) (Bitlist, error) {
-	if b.Len() != c.Len() {
+	if b.Len() != c.Len() || len(b) != len(c) {
 		return nil, ErrBitlistDifferentLength
 	}
 
@@ -247,8 +247,11 @@ func (b Bitlist) And(c Bitlist) (Bitlist, error) {
 
 // Xor returns the XOR result of the two bitfields. This method will return an error if the bitlists are not the same length.
 func (b Bitlist) Xor(c Bitlist) (Bitlist, error) {
-	if b.Len() != c.Len() {
+	if b.Len() != c.Len() || len(b) != len(c) {
 		return nil, ErrBitlistDifferentLength
+	}
+	if len(b) == 0 {
+		return Bitlist{}, nil
 	}
 
 	// Process all bytes but the last.
