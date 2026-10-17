@@ -82,7 +82,7 @@ func (b Bitvector512) Bytes() []byte {
 
 // Shift bitvector by i. If i >= 0, perform left shift, otherwise right shift.
 func (b Bitvector512) Shift(i int) {
-	if len(b) == 0 {
+	if len(b) < 8 {
 		return
 	}
 
