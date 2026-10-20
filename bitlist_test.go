@@ -917,6 +917,63 @@ func TestBitlist_Xor(t *testing.T) {
 	}
 }
 
+// Regression test for bitlists whose logical lengths match even though their
+// backing slices do not.  This can happen with empty or otherwise
+// non-canonical bitlists, and previously caused the binary operations to
+// either panic or silently accept incompatible operands.
+func TestBitlist_BinaryOperationsRejectDifferentBackingLengths(t *testing.T) {
+	short := Bitlist{}
+	long := Bitlist{0x00}
+	if short.Len() != long.Len() {
+		t.Fatalf("test setup has different logical lengths: %d != %d", short.Len(), long.Len())
+	}
+
+	operations := map[string]func(Bitlist, Bitlist) (Bitlist, error){
+		"And": func(a, b Bitlist) (Bitlist, error) { return a.And(b) },
+		"Or":  func(a, b Bitlist) (Bitlist, error) { return a.Or(b) },
+		"Xor": func(a, b Bitlist) (Bitlist, error) { return a.Xor(b) },
+	}
+	for name, operation := range operations {
+		operation := operation
+		t.Run(name, func(t *testing.T) {
+			for _, operands := range [][2]Bitlist{{short, long}, {long, short}} {
+				if got, err := operation(operands[0], operands[1]); err != ErrBitlistDifferentLength || got != nil {
+					t.Errorf("operation(%x, %x) = %x, %v, wanted nil, %v", operands[0], operands[1], got, err, ErrBitlistDifferentLength)
+				}
+			}
+		})
+	}
+
+	t.Run("Contains", func(t *testing.T) {
+		for _, operands := range [][2]Bitlist{{short, long}, {long, short}} {
+			if got, err := operands[0].Contains(operands[1]); err != ErrBitlistDifferentLength || got {
+				t.Errorf("(%x).Contains(%x) = %t, %v, wanted false, %v", operands[0], operands[1], got, err, ErrBitlistDifferentLength)
+			}
+		}
+	})
+
+	t.Run("NoAllocOr operands", func(t *testing.T) {
+		if err := long.NoAllocOr(short, long); err != ErrBitlistDifferentLength {
+			t.Fatalf("NoAllocOr returned %v, wanted %v", err, ErrBitlistDifferentLength)
+		}
+	})
+	t.Run("NoAllocOr result", func(t *testing.T) {
+		if err := long.NoAllocOr(long, short); err != ErrBitlistDifferentLength {
+			t.Fatalf("NoAllocOr returned %v, wanted %v", err, ErrBitlistDifferentLength)
+		}
+	})
+}
+
+func TestBitlist_XorEmpty(t *testing.T) {
+	got, err := (Bitlist{}).Xor(Bitlist{})
+	if err != nil {
+		t.Fatalf("Xor returned unexpected error: %v", err)
+	}
+	if got == nil || len(got) != 0 {
+		t.Fatalf("Xor returned %#v, wanted a non-nil empty bitlist", got)
+	}
+}
+
 func TestBitlist_Not(t *testing.T) {
 	tests := []struct {
 		a    Bitlist
