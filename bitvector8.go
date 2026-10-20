@@ -101,6 +101,9 @@ func (b Bitvector8) Contains(c Bitvector8) (bool, error) {
 	if b.Len() != bitvector8BitSize {
 		return false, ErrWrongLen
 	}
+	if len(b) != bitvector8ByteSize || len(c) != bitvector8ByteSize {
+		return false, ErrWrongLen
+	}
 
 	// Combine the byte from b and c, then XOR them against b. If the result of this is non-zero, then we
 	// are assured that a byte in c had bits not present in b.
@@ -116,6 +119,9 @@ func (b Bitvector8) Overlaps(c Bitvector8) (bool, error) {
 	if b.Len() != bitvector8BitSize {
 		return false, ErrWrongLen
 	}
+	if len(b) != bitvector8ByteSize || len(c) != bitvector8ByteSize {
+		return false, ErrWrongLen
+	}
 
 	// Invert b and xor the byte from b and c, then and it against c. If the result is non-zero, then
 	// we can be assured that byte in c had bits not overlapped in b.
@@ -129,6 +135,9 @@ func (b Bitvector8) Or(c Bitvector8) (Bitvector8, error) {
 		return nil, ErrBitvectorDifferentLength
 	}
 	if b.Len() != bitvector8BitSize {
+		return nil, ErrWrongLen
+	}
+	if len(b) != bitvector8ByteSize || len(c) != bitvector8ByteSize {
 		return nil, ErrWrongLen
 	}
 

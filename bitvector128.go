@@ -82,7 +82,7 @@ func (b Bitvector128) Bytes() []byte {
 
 // Shift bitvector by i. If i >= 0, perform left shift, otherwise right shift.
 func (b Bitvector128) Shift(i int) {
-	if len(b) == 0 {
+	if len(b) < 8 {
 		return
 	}
 
@@ -124,7 +124,7 @@ func (b Bitvector128) BitIndices() []int {
 // Contains returns true if the bitlist contains all of the bits from the provided argument
 // bitlist. This method will return an error if bitlists are not the same length.
 func (b Bitvector128) Contains(c Bitvector128) (bool, error) {
-	if b.Len() != c.Len() {
+	if b.Len() != c.Len() || len(b) != len(c) {
 		return false, ErrBitvectorDifferentLength
 	}
 
@@ -144,7 +144,7 @@ func (b Bitvector128) Contains(c Bitvector128) (bool, error) {
 // bitlist. This method will return an error if bitlists are not the same length.
 func (b Bitvector128) Overlaps(c Bitvector128) (bool, error) {
 	lenB, lenC := b.Len(), c.Len()
-	if b.Len() != c.Len() {
+	if b.Len() != c.Len() || len(b) != len(c) {
 		return false, ErrBitvectorDifferentLength
 	}
 
@@ -168,7 +168,7 @@ func (b Bitvector128) Overlaps(c Bitvector128) (bool, error) {
 
 // Or returns the OR result of the two bitfields. This method will return an error if the bitlists are not the same length.
 func (b Bitvector128) Or(c Bitvector128) (Bitvector128, error) {
-	if b.Len() != c.Len() {
+	if b.Len() != c.Len() || len(b) != len(c) {
 		return nil, ErrBitvectorDifferentLength
 	}
 
